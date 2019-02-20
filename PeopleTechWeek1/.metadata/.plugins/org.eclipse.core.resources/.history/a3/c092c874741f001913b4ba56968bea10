@@ -1,0 +1,495 @@
+package calculator.datastructure;
+
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Calculator {
+
+	double memory = 0;
+	double totalValue = 0;
+	double value = 0;
+	static Stack<String> operatorStack = new Stack<String>();
+	static Stack<Double> numberStack = new Stack<Double>();
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String equation ="";
+	
+		/*for(String n : noSpaces) {
+			System.out.print(n);
+		}*/
+		calculatorActions(equation);
+		//System.out.println("New String With Mult: " + equation);
+		//equation = noSpaces;
+		//System.out.println(splitOperations(equation));
+	}
+	
+	
+	public static void calculatorActions(String equation) {		
+	
+		
+		System.out.println("Please type out equation with spaces: ");
+		Scanner console = new Scanner(System.in);
+		
+		//equation = console.nextLine();
+		//equation = equation.replace(" ", "");
+		//System.out.println(3 + 5 * 4 / 2);
+		/*String[] noSpaces = equation.split(" ");
+		for(String n : noSpaces) {
+			System.out.print(n);
+		}*/
+		
+		/*	System.out.println();
+    
+		equation = addMultiParane(equation);
+		 */
+		double totalValue = 0;
+		
+		double value = 0;
+		totalValue = value;		
+		double memory = 0;
+		
+	/*	
+	  	System.out.println("Memory: " + memory);
+    	System.out.println("Total Value: " + totalValue);
+		System.out.println("Value: " + value);
+		System.out.print("Please type in next command: ");
+*/
+
+        String nextAction = console.nextLine();
+        while(!nextAction.equals("exit")) {
+        	switch(nextAction){
+        		case "mc":
+        			memory = 0;
+        			break;
+        		case "m+":
+        			memory += totalValue;
+        			break;
+        		case "m-":
+        			memory -= totalValue;
+        			break;
+        		case "c":
+        			totalValue = 0;
+        			value = 0;
+        			break;
+        		case "ce":
+        			value = 0;
+        			break;
+        		default:
+        			try {
+        			String[] noSpaces = stringClean(nextAction);//nextAction.split("[ ]");
+        		
+        			System.out.println("NOSPACES" + noSpaces[0]);        			
+        			if(noSpaces[0].matches("[+-/*/^(]")) {
+        			
+	        			System.out.println("Operator first: ");
+	        			try {
+	        				equation = totalValue + " " + nextAction;
+	        				equation = addMultiParane(equation);
+	        				addMultiParane(equation);
+	        				System.out.println("STRING " + newString(equation));
+	        				value = splitOperations(newString(equation));
+	            			totalValue = value;      
+	        			}catch(Exception e) {
+	        				System.out.println("Equation was not entered in correctly. ");
+	        				System.out.println("Please try again. ");
+	        			}
+        			 
+        			}else {
+        				try {	
+        					System.out.println("STRINGa" );
+        					equation = nextAction;
+        					//System.out.println(newString(equation));
+        					equation = addMultiParane(newString(equation));
+        					//System.out.println("STRINGa" + newString(equation));
+        					
+        					//System.out.println(outString);
+        					System.out.println("what is this");
+        					System.out.println((newString(equation)));
+        					System.out.println(outString(newString(equation)));
+        					System.out.println("what is this");
+        					value = splitOperations(outString(newString(equation)));
+        					System.out.println("VALUE: " + value);
+        					totalValue = value;   
+        				}catch(Exception e){
+        					e.printStackTrace();
+        					System.out.println("Equation was not entered in correctly. ");
+        					System.out.println("Please try again. ");
+        				}
+        			}
+        			break;
+        	}catch(Exception e) {
+				System.out.println("Equation was not entered in correctly. ");
+				System.out.println("Please try again. ");
+			}
+        	System.out.println("Memory: " + memory);
+        	System.out.println("Total Value: " + totalValue);
+			System.out.println("Value: " + value);
+			System.out.print("Please type in next command: ");
+        	nextAction =  console.nextLine();
+        }
+        System.out.println("Good Bye! ");       
+
+	}
+	
+	public static String[] stringCleana(String equation) {
+		String newEquation = "";
+		
+		for(int i = 0; i <= equation.length(); i++) {
+			if(isOperator(Character.toString(equation.charAt(i)))){
+				newEquation += Character.toString(equation.charAt(i)) + " ";
+				continue;
+			}else if(i < (equation.length() - 1)) {
+				for(int j = i+1; j <= equation.length(); j++) {
+					if(!isOperator(Character.toString(equation.charAt(j)))) {
+						if((j+1) == equation.length()) {
+							newEquation += equation.substring(i, j);
+							i = j;
+							break;
+						}else {
+							continue;
+						}
+					}else { 
+						newEquation += equation.substring(i,j);
+						i = j;
+						break;
+					}
+				}
+			}						
+		}
+		String[] n = null;
+		return n;
+	
+	}
+	
+	
+	
+	
+
+	public static String[] stringClean(String equation) {
+		String[] n;
+		String newEquation = "";
+		equation = equation.replace(" ", "");
+		System.out.println(equation);
+		for(int i = 0; i < equation.length(); i++) {
+			if(isOperator(Character.toString(equation.charAt(i)))){
+				newEquation += Character.toString(equation.charAt(i)) + " ";
+				continue;
+			}else if(i < (equation.length()-1)) {
+				for(int j = i+1; j <= equation.length(); j++) {
+					if(!isOperator(Character.toString(equation.charAt(j)))) {
+						if((j+1) == equation.length()) {
+							newEquation += equation.substring(i, j) + " ";
+							i = j-1;
+							break;
+						}else {
+							continue;
+						}
+					}else { 
+						newEquation += equation.substring(i,j) + " ";
+						i = j-1;
+						break;
+					}
+				}
+			}else {
+				newEquation += Character.toString(equation.charAt(i)) + " ";
+			}
+		}
+		System.out.println("new " + newEquation);
+		n = newEquation.split(" ");
+		for(String s: n) {
+			System.out.println(s);
+		}
+		
+		return n;
+	}
+	public static String newString(String equation) {
+		String[] n;
+		String newEquation = "";
+		equation = equation.replace(" ", "");
+		System.out.println(equation);
+		for(int i = 0; i < equation.length(); i++) {
+			if(isOperator(Character.toString(equation.charAt(i)))){
+				newEquation += Character.toString(equation.charAt(i));
+				continue;
+			}else if(i < (equation.length()-1)) {
+				for(int j = i+1; j <= equation.length(); j++) {
+					if(!isOperator(Character.toString(equation.charAt(j)))) {
+						if((j+1) == equation.length()) {
+							newEquation += equation.substring(i, j);
+							i = j-1;
+							break;
+						}else {
+							continue;
+						}
+					}else { 
+						newEquation += equation.substring(i,j);
+						i = j-1;
+						break;
+					}
+				}
+			}else {
+				newEquation += Character.toString(equation.charAt(i));
+			}
+		}		
+		//System.out.println("New Equation: " + newEquation);
+		n = newEquation.split(" ");
+	/*	for(String s: n) {
+			System.out.println(s);
+		}*/
+		
+		return newEquation;
+	}
+	public static String outString(String equation) {
+		String[] n;
+		String newEquation = "";
+		//equation = equation.replace(" ", "");
+		System.out.println(equation);
+		for(int i = 0; i < equation.length(); i++) {
+			if(isOperator(Character.toString(equation.charAt(i)))){
+				newEquation += Character.toString(equation.charAt(i)) + " ";
+				continue;
+			}else if(i < (equation.length()-1)) {
+				for(int j = i+1; j <= equation.length(); j++) {
+					if(!isOperator(Character.toString(equation.charAt(j)))) {
+						if((j+1) == equation.length()) {
+							newEquation += equation.substring(i, j) + " ";
+							i = j-1;
+							break;
+						}else {
+							continue;
+						}
+					}else { 
+						newEquation += equation.substring(i,j) + " ";
+						i = j-1;
+						break;
+					}
+				}
+			}else {
+				newEquation += Character.toString(equation.charAt(i)) + " ";
+			}
+		}		
+		//System.out.println("New Equation: " + newEquation);
+		n = newEquation.split(" ");
+	/*	for(String s: n) {
+			System.out.println(s);
+		}*/
+		
+		return newEquation;
+	}
+    
+	public static String addMultiParane(String equation) {
+		for(int i = 0; i < equation.length(); i++) {
+			char multiple = equation.charAt(i);
+			int numOfChar = multiple;
+			//System.out.println(Character.toString(equation.charAt(i)) + " == "+ numOfChar);
+			if(numOfChar == 40 && i != 0) {				 
+				if(Character.isDigit(equation.charAt(i-1)) && '*' != equation.charAt(i-1)) {
+					//System.out.println("Add(: ");
+					equation = equation.substring(0,i) + "* " + equation.substring(i,equation.length());
+				}
+			}else if(numOfChar == 41 && i != equation.length()-1) {	
+				if(Character.isDigit(equation.charAt(i+1)) && '*' != equation.charAt(i+1)) {
+					//System.out.println("Add): ");
+					equation = equation.substring(0,i+1) + " *" +equation.substring(i+1,equation.length());
+				}
+			}
+		}
+		
+		return equation;
+	}
+	
+	
+	public static double splitOperations(String equation) {
+		
+		String[] operations = equation.split(" ");
+		for(String n : operations) {
+			//System.out.print(n);
+			//prefixNotation(operations);
+		}
+		System.out.println();
+		return postFixSolution(postNotation(operations));
+				
+	}
+	
+	public static boolean isOperator(String operator) {
+		if(operator.matches("[()+-/*/^]")){
+			return true;
+		}else {
+			return false;
+		}		
+	}
+	
+	public static String[] postNotation(String[] equation){
+		//Stack<String> operatorStack = new Stack<String>();
+		String newEquation ="";
+		//System.out.println(equation.length);
+		for(int i = 0; i < equation.length; i++) {
+			if(isOperator(equation[i])) {
+				while(!operatorStack.isEmpty() && isOperator(operatorStack.peek())) {
+				//	System.out.println("Equation: " + isPrecedence(equation[i], operatorStack.peek().toString()) + " ");
+					if (isPrecedence(equation[i], operatorStack.peek().toString()) <= 0) {
+						String value = operatorStack.pop();
+						newEquation = newEquation + value + ", ";
+					}
+						break;
+				}
+				operatorStack.push(equation[i]);
+				//System.out.println(operatorStack.peek());
+				//System.out.println(isOperator(operatorStack.peek()));
+	
+			}else if(equation[i].matches("[(]")) {
+				operatorStack.push(equation[i]);
+			}else if(equation[i].matches("[)]")) {
+				  while(!operatorStack.isEmpty() && !operatorStack.peek().equals("(")) {
+					  String value = operatorStack.pop();
+						newEquation = newEquation + value + ", ";						
+				  }
+				  operatorStack.pop();
+					 
+				
+			}else {
+				if(isSpecialCharacter(equation[i])) {
+						newEquation = newEquation + specialCharacterCase(equation[i]) + ", ";
+					}else {
+						newEquation = newEquation + equation[i] + ", ";
+					}
+				}
+			}						
+		
+	while(!operatorStack.isEmpty()) {
+        newEquation = newEquation + operatorStack.pop() + ", ";
+		}
+	System.out.println("equation: " + newEquation);
+     return newEquation.split(", ");
+		
+	}
+	
+	public static boolean isSpecialCharacter(String special) {
+		switch(special) {				
+		case "e":
+			return true;
+		case "log":
+			return true;
+		case "ln":
+			return true;
+		case "pi":
+			return true;
+		default: 
+			return false;
+			
+		}		
+	}
+	public static double specialCharacterCase(String special) {
+		switch(special) {				
+		case "e":
+			return Math.E;
+		case "log":
+			return 2;
+		case "ln":
+			return 3;
+		case "pi":
+			return Math.PI;
+		default: 
+			return 0;
+			
+		}	
+	}
+	
+	public static double postFixSolution(String[] m) {
+		
+		for(String n: m) {
+			//System.out.println(n);
+		}
+		//System.out.println(m.toString());
+		
+		for(int i = 0; i < m.length; i++) {
+			if(isOperator(m[i])) {
+				if(m[i].matches("[+]")) {
+					//addition(numberStack.pop(),numberStack.pop());					
+					numberStack.push(addition(numberStack.pop(),numberStack.pop()));
+					//System.out.println("ADD: " +numberStack.peek());
+				}else if(m[i].matches("[-]")) {
+					//subtraction(numberStack.pop(),numberStack.pop());
+					numberStack.push(subtraction(numberStack.pop(),numberStack.pop()));
+					//System.out.println("SUBTRACT: " + numberStack.peek());
+					
+				}else if(m[i].matches("[*]")) {
+					//multiplication(numberStack.pop(),numberStack.pop());
+					//System.out.println(numberStack.pop() + " "+ numberStack.pop());
+					numberStack.push(multiplication(numberStack.pop(),numberStack.pop()));
+					//System.out.println("MULTIPLY: " + numberStack.peek());
+					
+				}else if(m[i].matches("[/]")) {
+					//division(numberStack.pop(),numberStack.pop());
+					numberStack.push(division(numberStack.pop(),numberStack.pop()));
+					//System.out.println("DIVISION: " + numberStack.peek());
+					
+				}else if(m[i].matches("[/^]")) {
+					numberStack.push(power(numberStack.pop(),numberStack.pop()));
+					//System.out.println("POWER: " + numberStack.peek());
+				}
+			}else {
+				numberStack.push(Double.valueOf(m[i]));
+			}			
+		}
+		//System.out.println(numberStack.size());
+		double finalNum = numberStack.pop();
+		return finalNum;
+		
+	}
+	
+	
+	public static int precendenceOperator(String operator) {
+					
+			switch(operator) {				
+			case "+":
+				return 2;
+			case "-":
+				return 2;
+			case "/":
+				return 3;
+			case "*":
+				return 3;
+			case "^":	
+				return 4;
+			default: 
+				return 0;
+				
+		}							
+		
+	}
+	
+	public static int isPrecedence(String operatorA, String operatorB) {			//is Priority
+		System.out.println(operatorA + " " + operatorB);
+		System.out.println(precendenceOperator(operatorA) + " " + precendenceOperator(operatorB));
+		return precendenceOperator(operatorA) - precendenceOperator(operatorB);
+		
+	}
+	
+	
+	
+	public static double addition(double a, double b) {
+		
+		return (a + b);
+	}
+	public static double subtraction(double a, double b) {
+		
+		return (b - a);
+	}
+	public static double multiplication(double a, double b) {
+		System.out.println(a + " " + b + " ");
+	return (a * b);
+	}
+	public static double division(double a, double b) {
+		double c = b / a;
+		//System.out.println(a + " " + b + " " + c);
+	return c;
+	}
+	public static double power(double a, double b) {
+		//System.out.println(a + " " + b + " " + c);
+		return Math.pow(b, a);
+		
+	}
+	
+}

@@ -1,0 +1,14 @@
+
+public class Employee implements Comparable<Employee>{
+	
+	private Long id;
+	private String name;
+	
+}
+
+
+
+
+public class ExcersizePriorityQueue {
+
+}

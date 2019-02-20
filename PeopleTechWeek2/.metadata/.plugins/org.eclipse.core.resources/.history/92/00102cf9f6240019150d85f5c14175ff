@@ -1,0 +1,14 @@
+
+public class HashAssignment {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		HashMap<String,Integer> pokedex = new HashMap<String,Integer>();
+		
+		
+		
+		
+	}
+
+}

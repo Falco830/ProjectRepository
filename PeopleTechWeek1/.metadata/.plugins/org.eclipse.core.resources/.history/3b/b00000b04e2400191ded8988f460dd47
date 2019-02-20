@@ -1,0 +1,482 @@
+import java.util.AbstractQueue;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+import java.util.Stack;
+
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.SystemException;
+
+class RuntimeErrors extends RuntimeException{
+	public RuntimeErrors() {
+		System.out.println("RUNTIME ERROR... ");
+	}	
+}
+
+class SyntaxError extends Exception {
+	public SyntaxError() {
+		System.out.println("SYNTAX ERROR... ");
+	}
+}
+
+public class CalculatorA {
+	static Scanner console; 
+		
+	public static void main(String[] args) throws RuntimeErrors, SyntaxError {
+		console = new Scanner(System.in); 
+		System.out.println("Enter equation: ");
+		String nextAction = console.nextLine();		
+		  actionMenu(nextAction);
+		}
+	
+	public static void actionMenu(String nextAction) throws RuntimeErrors, SyntaxError {
+		double totalValue = 0;
+		
+		double value = 0;
+		totalValue = value;		
+		double memory = 0;
+	  
+        while(!nextAction.equals("exit")) {
+        	switch(nextAction){
+        		case "mc":
+        			memory = 0;
+        			break;
+        		case "m+":
+        			memory += totalValue;
+        			break;
+        		case "m-":
+        			memory -= totalValue;
+        			break;
+        		case "c":
+        			totalValue = 0;
+        			value = 0;
+        			break;
+        		case "ce":
+        			value = 0;
+        			break;
+        		default:
+        			//String cleanEquation = stringClean(nextAction);
+        			String conditionEquation = conditionalizeEquation(nextAction);
+        			//System.out.println("Next Action: " + nextAction + " Condition Equation "+ conditionEquation);
+        			String[] noSpaces = stringSplitter(conditionEquation);
+        			//System.out.println(noSpaces[0]);
+        		  			
+        			if(noSpaces[0].matches("[+-/*/^]")) {
+        				try {
+        				System.out.println("Add: ");        				
+        				String newEquation  = totalValue + " " + conditionEquation;
+        				conditionEquation = conditionalizeEquation(newEquation);
+        				newEquation = postfixNotation(conditionEquation);
+        				System.out.println("PostFix: " + newEquation);
+        				value = evaluatePostfix(newEquation);
+        				
+        				totalValue = value;
+        			}catch(Exception e) {
+    					System.out.println("That input was incorrect. Please try again... ");
+    				}
+        			}else {
+        				try {
+        			
+        				System.out.println("New: ");
+        				
+        				String newEquation = postfixNotation(conditionEquation);
+        				System.out.println("PostFix: " + newEquation);
+        				value = evaluatePostfix(newEquation);
+        				totalValue = value;
+        				
+        				}catch(Exception e) {
+        					System.out.println("That input was incorrect. Please try again... ");
+        				}
+        			}       			
+        	}
+        	double badValue = (totalValue*2);
+        	//System.out.println(totalValue + " " + badValue);
+        	if(totalValue == badValue && badValue != 0) {
+        		
+        		throw new RuntimeErrors();
+        	}
+        	System.out.println("Memory: " + memory);
+        	System.out.println("Total Value: " + totalValue);
+			System.out.println("Value: " + value);
+			System.out.print("Please type in next command: ");
+        	nextAction =  console.nextLine();        
+        }
+        System.out.println("Good Bye! "); 
+	}
+	
+	public static double evaluatePostfix(String postfixNotation) throws RuntimeErrors{
+		Stack<Double> numberStack = new Stack<Double>();
+		double result = 0;
+		String[] splitPostfix = postfixNotation.split(", ");
+		for(int i = 0; i < splitPostfix.length; i++) {
+			if(!isOperator(splitPostfix[i].substring(0, splitPostfix[i].length()))) {
+				numberStack.push(Double.valueOf(splitPostfix[i].toString()));
+			}else {
+				if(splitPostfix[i].matches("[+]")) {
+					numberStack.push(addition(numberStack.pop(),numberStack.pop()));
+				}else if(splitPostfix[i].matches("[-]")) {
+					numberStack.push(subtraction(numberStack.pop(),numberStack.pop()));
+				}else if(splitPostfix[i].matches("[*]")) {
+					numberStack.push(multiplication(numberStack.pop(),numberStack.pop()));					
+				}else if(splitPostfix[i].matches("[/]")) {
+					numberStack.push(division(numberStack.pop(),numberStack.pop()));					
+				}else if(splitPostfix[i].matches("[/^]")) {
+					numberStack.push(power(numberStack.pop(),numberStack.pop()));
+				}
+			}
+		}
+		result = numberStack.pop();
+		return result;
+	}
+	
+	public static double addition(double a, double b) {
+		//System.out.println(a + " + " + b + " ");
+		return (a + b);
+	}
+	public static double subtraction(double a, double b) {
+		//System.out.println(b + " - " + a + " ");
+		return (b - a);
+	}
+	public static double multiplication(double a, double b) {
+		//System.out.println(a + " * " + b + " ");
+	return (a * b);
+	}
+	public static double division(double a, double b) {
+		double c = b / a;
+		//System.out.println(b + " / " + a + " " + c);
+	return c;
+	}
+	public static double power(double a, double b) {
+		return Math.pow(b, a);		
+	}
+	
+	public static boolean calculatorProblems(String equation) {
+		String[] equationElements = equation.split("[,]");
+		char wrong = 0;
+		for(int i = 0; i < equationElements.length; i++) {			
+			String specialCharacters = equationElements[i];
+			for(int j = 0; j < specialCharacters.length(); j++) {
+				if(specialCharacters.charAt(j) == '.') {
+					wrong++;
+				}
+				
+				if(wrong > 1) {
+					return true;
+				}
+			}
+			wrong = 0;
+		}
+		return false;		
+	}
+	
+	public static String postfixNotation(String equation) throws SyntaxError {
+		Stack<Character> operatorStack = new Stack<Character>();	
+		//Stack<Character> operatorSwitchStack = new Stack<Character>();
+		equation = equation.replace(" ", ",");
+		//System.out.println("Comma Equation: " + equation);
+		if(calculatorProblems(equation)) {
+			throw new SyntaxError();
+		}
+		String[] equationElements = equation.split("[,]");
+		String newEquation = "";
+		for(int i = 0; i < equationElements.length; i++) {			
+			String specialCharacters = equationElements[i];
+			double value = specialCharacter(specialCharacters);
+			if(value != 0) {
+				equationElements[i] = Double.toString(value);
+			}			
+			if(isOperator(equationElements[i].charAt(0))) {
+				//System.out.println("oper " +equationElements[i].charAt(0));
+				if(operatorStack.isEmpty()) {
+					if(equationElements[i].charAt(0) == '-' && !isOperator(equationElements[i+1].charAt(0))) {
+						newEquation += equationElements[i]+equationElements[i+1] + ", ";
+						operatorStack.push('+');
+						i = i+1;
+						continue;
+					}
+					operatorStack.push(equationElements[i].charAt(0));
+				}else if(priorityCheck(operatorStack.peek()) >= priorityCheck(equationElements[i].charAt(0))) {
+					if(equationElements[i].charAt(0) == '-' && !isOperator(equationElements[i+1].charAt(0))) {
+						newEquation += equationElements[i]+equationElements[i+1] + ", ";
+						//operatorStack.push('+');
+						while(!operatorStack.isEmpty() && priorityCheck(operatorStack.peek()) >= priorityCheck('+') ) {	//Scala 						
+							System.out.println(operatorStack.peek());
+							newEquation += operatorStack.pop() + ", ";						
+						}
+						if(!operatorStack.isEmpty() && priorityCheck(operatorStack.peek()) == priorityCheck('+')){
+							operatorStack.push('+');
+								break;
+						}
+						//operatorStack.push('+');
+						//break;
+						i = i+1;
+						continue;
+					}
+					while(!operatorStack.isEmpty() && priorityCheck(operatorStack.peek()) >= priorityCheck(equationElements[i].charAt(0)) ) {	//Scala 						
+						System.out.println(operatorStack.peek());
+						newEquation += operatorStack.pop() + ", ";						
+					}
+					if(!operatorStack.isEmpty() && priorityCheck(operatorStack.peek()) == priorityCheck(equationElements[i].charAt(0))){
+						operatorStack.push(equationElements[i].charAt(0));
+							break;
+					}
+					operatorStack.push(equationElements[i].charAt(0));
+				}else if(!operatorStack.isEmpty() && priorityCheck(operatorStack.peek()) == priorityCheck(equationElements[i].charAt(0))){											
+					if(equationElements[i].charAt(0) == '-' && !isOperator(equationElements[i+1].charAt(0))) {
+						newEquation += equationElements[i]+equationElements[i+1] + ", ";					
+						operatorStack.push('+');
+						i = i+1;
+						continue;
+					}
+					operatorStack.push(equationElements[i].charAt(0));
+				}else {
+					if(equationElements[i].charAt(0) == '-' && !isOperator(equationElements[i+1].charAt(0))) {
+						newEquation += equationElements[i]+equationElements[i+1] + ", ";
+						operatorStack.push('+');
+						i = i+1;
+						continue;
+					}
+					operatorStack.push(equationElements[i].charAt(0));
+				}
+			}else if(equationElements[i].charAt(0) == '(') {
+				operatorStack.push(equationElements[i].charAt(0));
+			}else if(equationElements[i].charAt(0) == ')'){				
+				while(operatorStack.peek()!='('){
+					newEquation += operatorStack.pop() + ", ";
+				}
+				if(operatorStack.peek() == '(') {
+					operatorStack.pop();
+				}
+			}else {
+				newEquation += (equationElements[i].toString()) + ", ";
+			}
+		}
+		if(!operatorStack.isEmpty()) {
+			//System.out.println(operatorStack.peek());
+		}
+		while(!operatorStack.isEmpty()) {
+			newEquation += operatorStack.pop() + ", ";
+		}
+		equation = newEquation;
+		//System.out.println("newEquation " + equation);
+		return equation;
+	}
+	
+	public static int priorityCheck(Character operator) {
+		switch(operator) {
+		case '+':
+			return 2;
+		case'-':
+			return 2;
+		case'/':
+			return 3;
+		case'*':
+			return 3;
+		case'(':
+			return 0;
+		case')':
+			return 0;
+		case'^':
+			return 4;			
+		default:
+			return 0;
+		}
+	}
+	public static boolean isOperator(Character operator) {
+		switch(operator) {
+		case '+':
+			return true;
+		case'-':
+			return true;
+		case'/':
+			return true;
+		case'*':
+			return true;
+		case'^':
+			return true;
+		case'(':
+			return false;
+		case')':
+			return false;
+		default:
+			return false;
+		}
+	}
+	
+	public static double specialCharacter(String special) {
+		
+		switch(special) {
+		case"e":
+			return Math.E;
+		case"pi":
+			return Math.PI;
+		default:
+			return 0;
+		}
+	}
+		
+	public static String conditionalizeEquation(String equation) {
+		String cleanEquation = stringClean(equation);	
+		equation = addMultiParane(cleanEquation);		
+		equation = stringClean(equation);	
+		equation = negativeNumbers(equation);
+		//System.out.println("neg " + equation);
+		equation = addMultiParane(equation);	
+		//System.out.println("mult " + equation);
+		equation = stringClean(equation);	
+		//System.out.println("cleaned " + equation);
+		//System.out.println("Equation: " + equation);
+		
+		return equation;		
+		
+	}
+
+	public static String negativeNumbers(String equation) {
+		
+		String newEquation = "";
+		equation = equation.replace(" ", "");
+		//System.out.println("old" + equation);
+		for(int i = 0; i<equation.length(); i++) {
+			//System.out.println(i);
+			if(equation.charAt(i) == '-') {
+				
+				if(i>0){
+					if(isOperator(Character.toString(equation.charAt(i-1))) && !isOperator(Character.toString(equation.charAt(i+1)))){
+						if(equation.charAt(i-1) == ')' && (i != equation.length()-2)) {
+							//newEquation += "+";
+						}
+						//System.out.println("i " + i);
+						for(int j = i+1; j < equation.length();j++) {
+							if(isOperator(Character.toString(equation.charAt(j)))){
+								
+								//System.out.println("i " + i + " " + equation.substring(i-1, j));
+								newEquation += /*"(0" + */equation.substring(i, j)/* + ")"*/;			//was at i-1
+								System.out.println("a1 " + newEquation);
+								i = j-1;															//did not exist
+								break;
+							}else if(j == equation.length()-1) {
+								newEquation += /*"(0" + */equation.substring(i, j+1)/* + ")"*/;			//was at i-1
+								System.out.println("a2 " +  newEquation);
+								i = j-1;															//did not exist
+								break;
+							}
+							//i = j;														//was there instead
+						}
+					}else if(equation.charAt(i+1) == '-') {	//to fix operator check to see if there are numbers/elements in these after elements 
+						for(int j = i+1; j < equation.length();j++) {
+							if(j == equation.length()-1 || isOperator(Character.toString(equation.charAt(j)))){
+								newEquation += "+" + equation.substring(i+2, j+2); //+2 +3
+								System.out.println("b " + newEquation);
+								i = j+1;
+								break;
+							}
+							//i = j+1;
+						}
+						//newEquation += "+" + equation.substring(i+2, i+3); //+2 +3
+						//i = i+2;											//+3
+					}else if(equation.charAt(i+1) == '(') {
+						newEquation += Character.toString(equation.charAt(i));
+					}else{
+						newEquation += Character.toString(equation.charAt(i));
+					}
+				}else if(!isOperator(Character.toString(equation.charAt(i+1)))){
+					for(int j = i+1; j < equation.length();j++) {
+						if(j == equation.length()-1 || isOperator(Character.toString(equation.charAt(j)))){
+							//newEquation += "(0" + equation.substring(i, j) + ")";
+							newEquation += equation.substring(i, j);
+							//System.out.println("c " + newEquation);
+							i = j-1;
+							break;
+						}	
+						
+					}					
+					//newEquation += "(0" + equation.substring(i, i+2) + ")";
+					//i = i+1;
+				}
+			}else {
+				newEquation += Character.toString(equation.charAt(i));
+				//System.out.println("d " + newEquation);
+			}
+		}
+		//newEquation = equation;
+		System.out.println("new" + newEquation);
+		return newEquation;
+	}
+
+public static String addMultiParane(String equation) {
+	equation = equation.replace(" ", "");
+	for(int i = 0; i < equation.length(); i++) {
+		char multiple = equation.charAt(i);
+		int numOfChar = multiple;
+		if(numOfChar == 40 && i != 0) {				 
+			if(Character.isDigit(equation.charAt(i-1)) && '*' != equation.charAt(i-1)) {
+				equation = equation.substring(0,i) + "*" + equation.substring(i,equation.length());
+			}
+		}else if(numOfChar == 41 && i != equation.length()-1) {	
+			if(Character.isDigit(equation.charAt(i+1)) && '*' != equation.charAt(i+1)) {
+				equation = equation.substring(0,i+1) + "*" + equation.substring(i+1,equation.length());
+			}else if(equation.charAt(i+1) == '(') {
+				equation = equation.substring(0,i+1) + "*" + equation.substring(i+1,equation.length());
+			}
+		}
+	}
+	return equation;
+}
+
+	public static String stringClean(String equation) {
+		String[] n;
+		String newEquation = "";
+		for(int i = 0; i < equation.length(); i++) {
+			if(isOperator(Character.toString(equation.charAt(i)))){
+				newEquation += Character.toString(equation.charAt(i)) + " ";
+				continue;
+			}else if(i < (equation.length()-1)) {
+				for(int j = i+1; j <= equation.length(); j++) {
+					if(!isOperator(Character.toString(equation.charAt(j)))) {
+						if((j+1) == equation.length()) {
+							newEquation += equation.substring(i, j+1) + " ";
+							i = j+1;
+							break;
+						}else{
+							continue;
+						}
+					}else{ 
+						newEquation += equation.substring(i,j) + " ";
+						i = j-1;
+						break;
+					}					
+				}
+			}else {
+				newEquation += Character.toString(equation.charAt(i)) + " ";
+			}
+		}
+		//System.out.println(newEquation);
+		return newEquation;
+	}
+	public static String[] stringSplitter(String equation) {
+		String[] n = equation.split(" ");		
+		return n;
+	}
+	public static boolean isOperator(String operator) {
+		
+		switch(operator) {
+		case "(":
+			return true;
+		case ")":
+			return true;
+		case "+":
+			return true;
+		case "-":
+			return true;
+		case "*":
+			return true;
+		case "/":
+			return true;
+		case "^":
+			return true;			
+		default:
+			return false;
+			
+		}
+	}
+}

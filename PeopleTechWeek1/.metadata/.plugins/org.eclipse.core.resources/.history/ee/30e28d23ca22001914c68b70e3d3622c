@@ -1,0 +1,142 @@
+import java.util.LinkedList;
+
+public class CousinTree {
+	
+	static Node root;
+	static LinkedList<Node> queue = new LinkedList<Node>();
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Node nd = new Node(23);
+		
+		CousinTree bt = new CousinTree();
+		
+		bt.addNodeToNode(new Node(20));
+		bt.addNodeToNode(new Node(23));
+		bt.addNodeToNode(new Node(22));
+		bt.addNodeToNode(new Node(21));
+		bt.addNodeToNode(new Node(19));
+		bt.addNodeToNode(new Node(18));
+		bt.addNodeToNode(new Node(13));
+		bt.addNodeToNode(new Node(15));
+		
+		 System.out.println("Preorder traversal of binary tree is "); 
+	        bt.printPreorder(root); 
+	  
+	        System.out.println("\nInorder traversal of binary tree is "); 
+	        bt.printInorder(root); 
+	  
+	        System.out.println("\nPostorder traversal of binary tree is "); 
+	        bt.printPostorder(root); 
+			System.out.println();
+			bt.printTreeOrder(root);
+		
+	}
+	
+	void printPostorder(Node node) 
+    { 
+        if (node == null) 
+            return; 
+  
+        // first recur on left subtree 
+        printPostorder(node.left); 
+  
+        // then recur on right subtree 
+        printPostorder(node.right); 
+  
+        // now deal with the node 
+        System.out.print(node.value + " "); 
+    } 
+  
+    /* Given a binary tree, print its nodes in inorder*/
+    void printInorder(Node node) 
+    { 
+        if (node == null) 
+            return; 
+  
+        /* first recur on left child */
+        printInorder(node.left); 
+  
+        /* then print the data of node */
+        System.out.print(node.value + " "); 
+  
+        /* now recur on right child */
+        printInorder(node.right); 
+    } 
+ 
+    /* Given a binary tree, print its nodes in preorder*/
+    void printPreorder(Node node) 
+    { 
+        if (node == null) 
+            return; 
+  
+        /* first print data of node */
+        System.out.print(node.value + " "); 
+  
+        /* then recur on left sutree */
+        printPreorder(node.left); 
+  
+        /* now recur on right subtree */
+        printPreorder(node.right); 
+    } 
+    
+    void printTreeOrder(Node node) 
+    { 
+        if (node == null) 
+            return; 
+        Node temp = root;
+  
+        System.out.println(temp.value);
+        while(node.left!=null && node.right!=null) {
+        	System.out.println("/" + " " + "\\");
+        	System.out.print(node.left.value + " " + node.left.value);
+        }
+  
+        /* then print the data of node */
+        System.out.print(node.value + " "); 
+        //System.out.println("/");
+        /* now recur on right child */
+        /* first recur on left child */
+     
+        printTreeOrder(node.left);              
+        printTreeOrder(node.right); 
+        if(node.left != null) {
+            System.out.print("/");
+           }
+        if(node.right != null) {
+        	System.out.print("\\");
+        }
+      
+    } 
+    
+	private Node addNodeToNode(Node current) {
+		
+		Node temp = root;
+		if(temp != null) {
+			while(temp.value != 0) {
+				//System.out.println("temp.value > current.value " + temp.value + " " + current.value );
+				if(temp.value > current.value) {
+					if(temp.left != null) {
+						temp = temp.left;
+						continue;
+					}
+						temp.left = current;
+						return temp.left;
+					
+				}else {
+					if(temp.right != null) {
+						temp = temp.right;
+						continue;
+					}
+						temp.right = current;
+						return temp.right;					
+				}
+			}
+		}else {
+			root = current;		//if no root exists create new one
+		}
+
+		return current;
+	}
+	
+}

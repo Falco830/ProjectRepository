@@ -1,0 +1,205 @@
+import java.util.LinkedList;
+import java.util.Stack;
+
+public class TowersOfHanoi {
+
+	public static void main(String[] args) {
+		
+		System.out.println(towersOfHanoi(3).toString());
+		//for(String n: stack)
+	}
+	
+	
+	public static Stack<Integer> towersOfHanoi(int level) {
+		
+		Stack<Integer> stickA = new Stack<Integer>();
+		Stack<Integer> stickB = new Stack<Integer>();
+		Stack<Integer> stickC = new Stack<Integer>();
+		
+		LinkedList<Stack<Integer>> polePosition = new LinkedList<Stack<Integer>>();
+						
+		for(int i = level; i > 0; i--) {
+			stickA.push(i);		//Set up tower of Hanoi
+		}
+		System.out.println("stackA " + stickA.toString());
+		polePosition.add(stickA);
+		polePosition.add(stickB);
+		polePosition.add(stickC);
+		int position = 0;
+		boolean noSolution = true
+		while(stickA.isEmpty() && stickB.isEmpty() && stickC.size() == level) {
+			for(int i = 1; i <= level; i++) {
+				for(int j = 0; i < polePosition.size(); i++) {
+					if(polePosition.get(j).peek() == i) {	
+						if(level%2 == 0) {
+							if(i%2 == 0) {
+								position = j + 2;
+								if(position > 2) {
+									position = position - 2;
+								}
+								if(polePosition.get(position).isEmpty() || polePosition.get(position).peek() > polePosition.get(j).peek()) {
+									polePosition.get(position).push(polePosition.get(j).pop());
+								}
+							}else {
+								position = j + 1;
+								if(position > 2) {
+									position = position - 1;
+								}
+								if(polePosition.get(position).isEmpty() || polePosition.get(position).peek() > polePosition.get(j).peek()) {
+									polePosition.get(position).push(polePosition.get(j).pop());
+								}
+							}
+						}else {
+							if(i%2 == 0) {
+								
+								position = j + 1;
+								if(position > 2) {
+									position = position - 1;
+								}
+								if(polePosition.get(position).isEmpty() || polePosition.get(position).peek() > polePosition.get(j).peek()) {
+									polePosition.get(position).push(polePosition.get(j).pop());
+								}							
+							}else {								
+								position = j + 2;
+								if(position > 2) {
+									position = position - 2;
+								}
+								if(polePosition.get(position).isEmpty() || polePosition.get(position).peek() > polePosition.get(j).peek()) {
+									polePosition.get(position).push(polePosition.get(j).pop());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return polePosition.get(2);
+		
+		//level A C B		
+		/*int currentLevel = level;
+		for(int i = level; i > 0; i--) {
+			if(currentLevel == 1) {				
+				currentLevel = 1;	
+				stickC.push(stickA.pop());
+				System.out.println("move disk C to disk A");				
+			}			
+			if(currentLevel % 2 == 0) {
+				
+			}
+		}
+		
+
+		
+		for(int i = 0; i < 3000; i++) {			
+			if(!stickA.isEmpty()) {
+				if(!stickC.isEmpty()) {
+					if(stickA.peek() < stickC.peek()) {
+						stickC.push(stickA.pop());
+					}
+				}else if(stickC.isEmpty()){
+					stickC.push(stickA.pop());
+				}
+				if(!stickB.isEmpty()) {
+					if(stickA.peek() < stickB.peek()) {
+						stickC.push(stickA.pop());
+					}
+				}else if(stickB.isEmpty()){
+					stickB.push(stickA.pop());
+				}
+			}else if(!stickB.isEmpty()) {
+				if(!stickC.isEmpty()) {
+					if(stickB.peek() < stickC.peek()) {
+						stickC.push(stickB.pop());
+					}
+				}else if(stickC.isEmpty()){
+					stickC.push(stickA.pop());
+				}
+				if(!stickA.isEmpty()) {
+					if(stickB.peek() < stickB.peek()) {
+						stickC.push(stickA.pop());
+					}
+				}else if(stickA.isEmpty()){
+					stickA.push(stickB.pop());
+				}
+			}else if(!stickC.isEmpty()) {
+				if(!stickB.isEmpty()) {
+					if(stickC.peek() < stickB.peek()) {
+						stickC.push(stickC.pop());
+					}
+				}else if(stickB.isEmpty()){
+					stickC.push(stickB.pop());
+				}
+				if(!stickA.isEmpty()) {
+					if(stickC.peek() < stickA.peek()) {
+						stickA.push(stickC.pop());
+					}
+				}else if(stickA.isEmpty()){
+					stickA.push(stickC.pop());
+				}
+			}
+			if(stickA.isEmpty() && stickB.isEmpty() && stickC.size() == level) {
+				return stickC;
+			}
+		}
+		
+		
+		
+		/*
+		System.out.println(stickA);
+		System.out.println(stickB);
+		System.out.println(stickC);
+		System.out.println();
+		
+		stickC.push(stickA.pop());
+		System.out.println(stickA);
+		System.out.println(stickB);
+		System.out.println(stickC);
+		System.out.println();
+		stickB.push(stickA.pop());
+		System.out.println(stickA);
+		System.out.println(stickB);
+		System.out.println(stickC);
+		System.out.println();
+
+		stickB.push(stickC.pop());
+		System.out.println(stickA);
+		System.out.println(stickB);
+		System.out.println(stickC);
+		System.out.println();
+
+		stickC.push(stickA.pop());
+		System.out.println(stickA);
+		System.out.println(stickB);
+		System.out.println(stickC);
+		System.out.println();
+
+		stickA.push(stickB.pop());
+		System.out.println(stickA);
+		System.out.println(stickB);
+		System.out.println(stickC);
+		System.out.println();
+
+		stickC.push(stickB.pop());
+		System.out.println(stickA);
+		System.out.println(stickB);
+		System.out.println(stickC);
+		System.out.println();
+
+		stickC.push(stickA.pop());
+		System.out.println(stickA);
+		System.out.println(stickB);
+		System.out.println(stickC);
+		System.out.println();
+
+		*/
+		/*
+		return stickC;
+		
+		*/
+		
+		
+		
+		
+	}
+	
+}

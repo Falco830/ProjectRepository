@@ -1,0 +1,277 @@
+package plant.genetic.algorithm;
+
+import java.awt.geom.Line2D;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+import java.util.Stack;
+
+class BranchNode { 
+	  
+    double value;
+    BranchNode left, right;
+    int distanceFromRoot;
+    int ageOfRoot;
+    
+    ArrayList<BranchNode> nodes;
+    
+    public int x;	//current position for x
+	public int y;	//current position for y
+	
+	 BranchNode(double evaluation, ArrayList<BranchNode> nodes, int x, int y, int ageOfRoot) {   	
+	        value = evaluation;
+	        this.ageOfRoot = ageOfRoot;
+	        this.nodes = nodes;
+	        if(this.nodes != null) {
+	        	allNodesAreNull(this.nodes);
+	        }
+	        this.x = x;
+	        this.y = y;
+	        
+	        distanceFromRoot = 0;
+	        
+	        left = right = null;
+	    } 
+    BranchNode(BranchNode rootNode, double evaluation, ArrayList<BranchNode> nodes, int x, int y, int ageOfRoot) {   	
+        value = evaluation;
+        this.ageOfRoot = ageOfRoot;
+        this.nodes = nodes;
+        if(this.nodes != null) {
+        	allNodesAreNull(this.nodes);
+        }
+        this.x = x;
+        this.y = y;
+        
+        distanceFromRoot = findDistance(rootNode, x, y);
+        
+        left = right = null;
+    } 
+    
+    public void allNodesAreNull(ArrayList<BranchNode> nodes) {
+    	if(!nodes.isEmpty()) {
+	    	for(BranchNode bn: nodes) {
+	    		bn = null;
+	    	}
+    	}
+    }
+    public int findDistance(BranchNode root, int x, int y) 
+    { 
+      
+        // base case 
+        if (root == null) { 
+            return -1; 
+        } 
+      
+        // If the key is present at root, 
+        // distance is zero 
+        if ((root.x == x) && (root.y == y)) {
+            return 0; 
+        }
+      
+        // Iterating through tree using BFS 
+        Queue<BranchNode> q = new LinkedList<BranchNode>(); 
+      
+        // pushing root to the queue 
+        ((LinkedList<BranchNode>) q).push(root); 
+      
+        // pushing marker to the queue 
+        ((LinkedList<BranchNode>) q).push(null); 
+      
+        // Variable to store count of level 
+        int levelCount = 0;     	
+        while (!q.isEmpty()) { 
+        	
+            BranchNode temp = q.poll();
+            
+            // if node is marker, push marker to queue 
+            // else, push left and right (if exists) 
+            if (temp == null && !q.isEmpty()) { 
+                ((LinkedList<BranchNode>) q).add(null); 
+
+                // Increment levelCount, while moving 
+                // to new level 
+                levelCount++; 
+            }else if (temp != null) {             
+                // If node at current level is Key, 
+                // return levelCount 
+                if (temp.x == x && temp.y == y) { 
+                    return levelCount; 
+                }
+      
+                for(int i = 0; i<temp.nodes.size(); i++){	            	
+                	if (temp.nodes.get(i).x == x && temp.nodes.get(i).y == y) {
+                		if(temp.nodes.get(i) != null) {
+                			((LinkedList<BranchNode>) q).push(temp.nodes.get(i));
+                		}
+                	}
+                }
+            } 
+        } 
+      
+        // If key is not found 
+        return -1; 
+    } 
+} 
+
+public class Seed {
+	
+	
+	//public Node expressionTreeDNA;
+	public final BranchNode rootNode;
+	public BranchNode currentNode;
+	public String rootChoiceExpression;
+	public String rootDirectionExpression;
+	public int ageOfSeedBranch;
+	
+	public int initialx;
+	public int initialy;
+	
+	private ArrayList<Line2D> lineList;
+	
+	public Seed(BranchNode branchNode, int initialx, int initialy, String rootChoiceExpression, String rootDirectionExpression) {
+			
+		this.rootChoiceExpression = rootChoiceExpression;
+		this.rootDirectionExpression = rootDirectionExpression;
+		this.rootNode = branchNode;
+		this.currentNode = this.rootNode;
+		this.initialx = initialx;
+		this.initialy = initialy;
+		
+		lineList = new ArrayList<Line2D>();		
+		this.ageOfSeedBranch = 10;
+	}
+	
+	public void addToLineList(Line2D newLine) {
+		lineList.add(newLine);
+	}
+	
+	public ArrayList<Line2D> getLineList(){
+		return lineList; 
+	}
+	
+	public String getDirectionExpression() {
+		return rootDirectionExpression;
+	}
+	
+	public void addBranch(BranchNode selectedNode, double evaluation, ArrayList<BranchNode> nodes, int x, int y) {
+		//ageOfSeedBranch++;
+		BranchNode newBranch = new BranchNode(rootNode,evaluation,nodes,x,y,ageOfSeedBranch);
+		//if(ageOfSeedBranch == 10)ageOfSeedBranch = 9;
+		
+		currentNode = selectedNode;
+		//Representation2D rep2D = new Representation2D();
+		
+		//rep2D.leafGrowth(this, sd);
+		currentNode.nodes.add(newBranch);
+
+		
+	}
+	
+	public void printLevelOrder(){ 
+	        Queue<BranchNode> queue = new LinkedList<BranchNode>(); 
+	        queue.add(rootNode); 
+	        while (!queue.isEmpty())  
+	        { 
+	  
+	            /* poll() removes the present head. 
+	            For more information on poll() visit  
+	            http://www.tutorialspoint.com/java/util/linkedlist_poll.htm */
+	        	BranchNode tempNode = queue.poll(); 
+	            //System.out.print(tempNode.value + " "); 
+	  
+	            for(int i = 0; i<tempNode.nodes.size(); i++){	            	
+	            	if(tempNode.nodes.get(i) != null) {
+	            		queue.add(tempNode.nodes.get(i));
+	            		break;
+            	}
+            }
+        } 
+    } 
+	
+	public void evaluateEveryRecentNode(){ 
+        Queue<BranchNode> queue = new LinkedList<BranchNode>(); 
+        queue.add(rootNode); 
+        while (!queue.isEmpty())  
+        { 
+  
+            /* poll() removes the present head. 
+            For more information on poll() visit  
+            http://www.tutorialspoint.com/java/util/linkedlist_poll.htm */
+        	BranchNode tempNode = queue.poll(); 
+        	if(tempNode.ageOfRoot > 0) {
+        		tempNode.value = RandomExpression.evaluate(rootChoiceExpression,this);
+        	}      	
+            //System.out.println("Node Value: " + tempNode.value + " "); 
+            if(tempNode.nodes == null) {
+            	return;
+            }
+            for(int i = 0; i<tempNode.nodes.size(); i++){	            	
+            	if(tempNode.nodes.get(i) != null) {
+            		queue.add(tempNode.nodes.get(i));
+            	}
+            }
+        } 
+	} 
+	public void ageTree(){ 
+        Queue<BranchNode> queue = new LinkedList<BranchNode>(); 
+        queue.add(rootNode); 
+        while (!queue.isEmpty())  
+        { 
+  
+            /* poll() removes the present head. 
+            For more information on poll() visit  
+            http://www.tutorialspoint.com/java/util/linkedlist_poll.htm */
+        	BranchNode tempNode = queue.poll(); 
+        	//tempNode.value = RandomExpression.evaluate(rootChoiceExpression,this);
+            //System.out.println("Node Value: " + tempNode.value + " "); 
+        	if(tempNode.ageOfRoot != 0) {
+        		tempNode.ageOfRoot = tempNode.ageOfRoot--;
+        	}
+        	
+            if(tempNode.nodes == null) {
+            	return;
+            }
+            for(int i = 0; i<tempNode.nodes.size(); i++){	            	
+            	if(tempNode.nodes.get(i) != null) {
+            		queue.add(tempNode.nodes.get(i));
+            	}
+            }
+        } 
+	} 
+	
+	public BranchNode resolveMaxNode(){
+		BranchNode maxNode;
+		double maxValue;
+		
+        Queue<BranchNode> queue = new LinkedList<BranchNode>();
+        maxNode = rootNode;
+        maxValue = rootNode.value;
+        queue.add(rootNode); 
+        while (!queue.isEmpty())  
+        {
+        	BranchNode tempNode = queue.poll(); 
+            //System.out.print(tempNode.value + " "); 
+        	
+        		//tempNode.value = RandomExpression.evaluate(rootChoiceExpression,this);
+        	
+            if(maxValue < tempNode.value) {
+            	if(tempNode.ageOfRoot > 0) {
+	            	maxNode = tempNode;
+	            	maxValue = tempNode.value;
+            	}
+            }
+            if(tempNode.nodes == null) {
+            	return null;
+            }
+            for(int i = 0; i<tempNode.nodes.size(); i++){
+            	if(tempNode.nodes.get(i) != null) {
+            		queue.add(tempNode.nodes.get(i));
+	        	}
+	        }
+	    }
+        return maxNode;
+	}
+}
+
+

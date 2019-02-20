@@ -1,0 +1,27 @@
+import java.util.Stack;
+
+public class InputString {
+
+	public static void main(String[] args) {
+		String inputString = "";
+	}
+	
+	
+	public static boolean isValidString(String input) {
+		Stack<Character> brackets = new Stack<Character>();
+		for(int i = 0; i<input.length(); i++) {
+			if(Character.toString(input.charAt(i)).matches("([{")) {
+				brackets.push(input.charAt(i));
+			}else if (Character.toString(input.charAt(i)).matches(")]}")){
+				
+			}
+				
+		}
+		
+		
+		
+	}
+	
+	
+	
+}

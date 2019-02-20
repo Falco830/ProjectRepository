@@ -1,0 +1,71 @@
+
+public class PrimeDifference {
+	
+	public static void main(String[] args) {
+		
+		primeDifference(2000);
+		
+	}
+	
+	public static void primeDifference(int num) {
+		//int a = 0;
+		int b = 3;
+		int c = 0;
+		
+		int RA = 0;
+		int RB = 0;
+		//System.out.println(1 + " - " + 0 + " = " + 1);
+		System.out.println(1);
+		//System.out.println(2 + " - " + 1 + " = " + 1);
+		System.out.println(1);
+		//System.out.println(3 + " - " + 2 + " = " + 1);
+		System.out.println(1);
+		//System.out.println("Difference " + 5 + " - " + 3 + " = " + 2);
+		int primeComposite = 1;
+		for(int i = 5; i <= num ; i++) {
+			
+			for(int j = 2; j <= Math.sqrt(i); j++) {
+				//System.out.println("i: " + i + " j: " + j);
+				//System.out.println(i%j == 0);
+				if(i%j == 0) {
+					if(primeComposite < 1) {
+						RA = (i/j);
+						RB = j;
+						//System.out.println(" only complete once! "); //if anymore than it is not special composite number
+						primeComposite++;
+						continue;
+					}else {
+						//System.out.println(" broken...");
+					}
+					primeComposite = 0;
+					break;
+				}
+				//System.out.println("j: " + j + " Math.sqrt(i): " + ((int)Math.sqrt(i)));
+				if(j == ((int)Math.sqrt(i))) {
+					
+					if(primeComposite == 1) {
+						//System.out.println("RSA: " + RA + " * " + RB + " = "  + i);
+						//System.out.println();
+						primeComposite = 0;
+						break;
+					}
+					
+					c = i - b;
+					//System.out.print( i + " - " + b + " = " + c);
+					
+					for(int k = 1; k <= c; k++) {
+						System.out.println();
+						for(int z = 1; z<=k; z++) {
+							System.out.print(" " + c + " ");
+						}
+						
+					}
+					//System.out.println();
+					
+					
+					b = i;									
+				}
+			}		
+		}
+	}
+}

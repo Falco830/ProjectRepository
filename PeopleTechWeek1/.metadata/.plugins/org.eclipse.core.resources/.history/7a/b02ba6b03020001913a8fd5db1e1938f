@@ -1,0 +1,197 @@
+import java.util.LinkedList;
+
+public class BinaryTree {
+
+	
+	static Node root;
+	static LinkedList<Node> queue = new LinkedList<Node>();
+	
+	
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Node nd = new Node(23);
+		 nd = new Node(23);
+		 nd = new Node(23);
+		 nd = new Node(23);
+		BinaryTree bt = new BinaryTree();
+		
+		bt.addNodeToNode(new Node(20));
+		bt.addNodeToNode(new Node(23));
+		
+		bt.addNodeToNode(new Node(13));
+		bt.addNodeToNode(new Node(15));
+		//bt.addNodeToNode(new Node(43));
+
+        System.out.println("Preorder traversal of binary tree is "); 
+        bt.printPreorder(root); 
+  
+        System.out.println("\nInorder traversal of binary tree is "); 
+        bt.printInorder(root); 
+  
+        System.out.println("\nPostorder traversal of binary tree is "); 
+        bt.printPostorder(root); 
+		System.out.println();
+		
+		String serialized = bt.serialize(root);
+		System.out.println(serialized);
+		Node deserialized = bt.deserialize(serialized);
+		
+		//System.out.println(deserialized);
+	     System.out.println("Preorder traversal of binary tree is "); 
+	        bt.printPreorder(deserialized); 
+	  
+	        System.out.println("\nInorder traversal of binary tree is "); 
+	        bt.printInorder(deserialized); 
+	  
+	        System.out.println("\nPostorder traversal of binary tree is "); 
+	        bt.printPostorder(deserialized); 
+			System.out.println();
+	}
+	// Encodes a tree to a single string.
+	public String serialize(Node root) {
+	    if(root==null){
+	        return "";
+	    }
+	 
+	    StringBuilder sb = new StringBuilder();
+	 
+	    LinkedList<Node> queue = new LinkedList<Node>();
+	 
+	    queue.add(root);
+	    while(!queue.isEmpty()){
+	    	Node t = queue.poll();
+	        if(t!=null){
+	            sb.append(String.valueOf(t.value) + "-");
+	            queue.add(t.left);
+	            queue.add(t.right);
+	        }else{
+	            sb.append("_-");
+	        }
+	    }
+	 
+	    sb.deleteCharAt(sb.length()-1);
+	    System.out.println(sb.toString());
+	    return sb.toString();
+	}
+	 
+	// Decodes your encoded data to tree.
+	public Node deserialize(String data) {
+	    if(data==null || data.length()==0)
+	        return null;
+	 
+	    String[] arr = data.split("-");
+	    Node root = new Node(Integer.parseInt(arr[0])); 
+	 
+	    LinkedList<Node> queue = new LinkedList<Node>();
+	    queue.add(root);
+	 
+	    int i=1;
+	    while(!queue.isEmpty()){
+	    	Node t = queue.poll();
+	 
+	        if(t==null)
+	            continue;
+	 
+	        if(!arr[i].equals("_")){
+	            t.left = new Node(Integer.parseInt(arr[i]));    
+	            queue.offer(t.left);
+	 
+	        }else{
+	            t.left = null;
+	            queue.offer(null);
+	        }
+	        
+	        i++;
+	 
+	        if(!arr[i].equals("_")){
+	            t.right = new Node(Integer.parseInt(arr[i]));    
+	            queue.offer(t.right);
+	 
+	        }else{
+	            t.right = null;
+	            queue.offer(null);
+	        }
+	        i++;
+	    }
+	 
+	    return root;
+	}
+	private Node addNodeToNode(Node current) {
+			
+		Node temp = root;
+		if(temp != null) {
+			while(temp.value != 0) {
+				//System.out.println("temp.value > current.value " + temp.value + " " + current.value );
+				if(temp.value > current.value) {
+					if(temp.left != null) {
+						temp = temp.left;
+						continue;
+					}
+						temp.left = current;
+						return temp.left;
+					
+				}else {
+					if(temp.right != null) {
+						temp = temp.right;
+						continue;
+					}
+						temp.right = current;
+						return temp.right;					
+				}
+			}
+		}else {
+			root = current;		//if no root exists create new one
+		}
+
+		return current;
+	}
+	void printPostorder(Node node) 
+    { 
+        if (node == null) 
+            return; 
+  
+        // first recur on left subtree 
+        printPostorder(node.left); 
+  
+        // then recur on right subtree 
+        printPostorder(node.right); 
+  
+        // now deal with the node 
+        System.out.print(node.value + " "); 
+    } 
+  
+    /* Given a binary tree, print its nodes in inorder*/
+    void printInorder(Node node) 
+    { 
+        if (node == null) 
+            return; 
+  
+        /* first recur on left child */
+        printInorder(node.left); 
+  
+        /* then print the data of node */
+        System.out.print(node.value + " "); 
+  
+        /* now recur on right child */
+        printInorder(node.right); 
+    } 
+  
+    /* Given a binary tree, print its nodes in preorder*/
+    void printPreorder(Node node) 
+    { 
+        if (node == null) 
+            return; 
+  
+        /* first print data of node */
+        System.out.print(node.value + " "); 
+  
+        /* then recur on left sutree */
+        printPreorder(node.left); 
+  
+        /* now recur on right subtree */
+        printPreorder(node.right); 
+    } 
+
+}

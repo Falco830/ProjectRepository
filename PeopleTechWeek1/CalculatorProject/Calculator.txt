@@ -1,0 +1,9 @@
+
+public class Calculator {
+
+	public static void main(String[] args) throws IOException {
+ int result = 123123;
+System.out.println("Result: " + result);		
+	}
+
+} 

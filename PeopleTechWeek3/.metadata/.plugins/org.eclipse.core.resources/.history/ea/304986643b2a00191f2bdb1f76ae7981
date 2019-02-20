@@ -1,0 +1,20 @@
+
+public class DatabaseConnection {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		try {
+			
+			
+			Class.forName("com.oracle.jdbc.driver.OracleDriver");
+			
+			
+		}catch(Exception e) {
+			
+			
+			
+		}	
+		
+	}
+
+}

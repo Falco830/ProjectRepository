@@ -1,0 +1,13 @@
+
+public class Node {
+	
+	int value;
+	Node Left;
+	Node Right;
+	public Node(int value) {
+		  this.value = value;
+	        right = null;
+	        left = null;
+	}
+
+}

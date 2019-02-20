@@ -1,0 +1,35 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class DatabaseConnection {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		try {
+			System.out.println("Decalring... ");
+			
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			System.out.println("Conecting... ");
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","SYSTEM","admin");
+			//step3 create the statement object  
+			Statement stmt=con.createStatement();  
+			//step4 execute query  
+			ResultSet rs=stmt.executeQuery("Select * From Book");  
+			System.out.println("selecting..");
+			System.out.println(rs.getInt(1));
+			while(rs.next()) {  
+				System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));  
+			}
+			//step5 close the connection object  
+			con.close();  
+		}catch(Exception e) {
+		
+			System.out.println(e);
+			System.out.println("Exited");
+		}	
+		
+	}
+
+}

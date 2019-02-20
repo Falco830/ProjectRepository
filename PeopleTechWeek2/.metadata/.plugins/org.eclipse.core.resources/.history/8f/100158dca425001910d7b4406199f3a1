@@ -1,0 +1,35 @@
+import java.util.ArrayList;
+
+public class ArrayListStackQueue {
+
+	static ArrayList al = new ArrayList();
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		int[] ar = {3, 5, 3, 2, 4, 1,2};
+		
+		int[] am = stackMimic(ar);
+		
+	}
+
+	
+	public static ArrayList stackMimic(int[] ar) {
+		
+		//give
+		for(int i = 0; i <ar.length; i++) {
+			al.add(0, ar[i]);
+			
+		}
+		
+		int[] stackResult = new int[al.size()];
+		
+		//take
+		for(int i = 0; i < al.size();i++) {
+			stackResult[i] = al.get(0);
+		}
+		
+		return al;
+		
+	}
+	
+}

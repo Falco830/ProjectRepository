@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;TestMethodWithParameters.java&apos; to &apos;CoreJava_Project/src/com.ptg&apos;&#x0D;&#x0A;- Original project: &apos;CoreJava_Project&apos;&#x0D;&#x0A;- Destination element: &apos;CoreJava_Project/src/com.ptg&apos;&#x0D;&#x0A;- Original element: &apos;TestMethodWithParameters.java&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="/src&lt;com.ptg" element1="/src&lt;{TestMethodWithParameters.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1547485884350" units="1" version="1.0"/>
+</session>

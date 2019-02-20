@@ -1,0 +1,57 @@
+
+public class ArrayStackQueue {
+	static int[] arrayS = new int[10];
+	static int[] arrayQ = new int[10];
+	
+	ArrayStackQueue() {
+		
+		
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		for(Integer ns: arrayS) {
+			ns = -1;
+		}		
+		
+		arrayS[0] =  -1;
+		System.out.println(arrayS[0]);
+		
+		
+		System.out.println(arrayS[1]);
+		int element = 5;
+		stackPush(element);
+		stackPop();
+		
+	}
+	
+	public static int[] stackPush(int element) {
+		
+		//array = new int[array.length];		
+		for(int i = 0; i<arrayS.length; i++) {
+			if(arrayS[i] == -1) {				
+				arrayS[i] = element;
+				break;
+			}
+		}
+		return arrayS;		
+	}
+	
+	public static int stackPop() {
+		
+		for(int i = 0; i < arrayS.length; i++) {
+			if(arrayS[i] == -1) {
+				int result = arrayS[i-1];
+				arrayS[i-1] = -1;
+				return result;
+			}
+			if((arrayS.length-1) == i) {
+				int result = arrayS[i-1];
+				arrayS[i] = -1;
+				return result;
+			}
+		}
+		return -1;
+	}
+}

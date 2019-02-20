@@ -1,0 +1,24 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class DatabaseConnection {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		try {
+			System.out.println("Decalring... ");
+			
+			Class.forName("com.oracle.jdbc.driver.OracleDriver");
+			System.out.println("Conecting... ");
+			Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","SYSTEM","admin");
+			
+			
+		}catch(Exception e) {
+		
+			System.out.println(e);
+			System.out.println("Exited");
+		}	
+		
+	}
+
+}

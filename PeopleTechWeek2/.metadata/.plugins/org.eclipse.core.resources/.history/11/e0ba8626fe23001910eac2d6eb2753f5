@@ -1,0 +1,10 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class MapTest {
+public static void main(String[] args) {
+	Map<String, Integer> hm = new HashMap<String, Integer>();
+	hm.put("a", new Integer(100));
+	
+}
+}
