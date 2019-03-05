@@ -2,6 +2,7 @@ package plant.genetic.algorithm;
 
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -13,27 +14,15 @@ class BranchNode {
     BranchNode left, right;
     int distanceFromRoot;
     int ageOfRoot;
+    String gradiantValue;
+    
     
     ArrayList<BranchNode> nodes;
     
     public int x;	//current position for x
 	public int y;	//current position for y
 	
-	 BranchNode(double evaluation, ArrayList<BranchNode> nodes, int x, int y, int ageOfRoot) {   	
-	        value = evaluation;
-	        this.ageOfRoot = ageOfRoot;
-	        this.nodes = nodes;
-	        if(this.nodes != null) {
-	        	allNodesAreNull(this.nodes);
-	        }
-	        this.x = x;
-	        this.y = y;
-	        
-	        distanceFromRoot = 0;
-	        
-	        left = right = null;
-	    } 
-    BranchNode(BranchNode rootNode, double evaluation, ArrayList<BranchNode> nodes, int x, int y, int ageOfRoot) {   	
+	 BranchNode(double evaluation, ArrayList<BranchNode> nodes, int x, int y, int ageOfRoot, String gradiantValue) {   	
         value = evaluation;
         this.ageOfRoot = ageOfRoot;
         this.nodes = nodes;
@@ -42,6 +31,24 @@ class BranchNode {
         }
         this.x = x;
         this.y = y;
+
+        this.gradiantValue = gradiantValue;
+        
+        distanceFromRoot = 0;
+        
+        left = right = null;
+    } 
+    BranchNode(BranchNode rootNode, double evaluation, ArrayList<BranchNode> nodes, int x, int y, int ageOfRoot, String gradiantValue) {   	
+        value = evaluation;
+        this.ageOfRoot = ageOfRoot;
+        this.nodes = nodes;
+        if(this.nodes != null) {
+        	allNodesAreNull(this.nodes);
+        }
+        this.x = x;
+        this.y = y;
+        
+        this.gradiantValue = gradiantValue;
         
         distanceFromRoot = findDistance(rootNode, x, y);
         
@@ -119,7 +126,9 @@ public class Seed {
 	
 	//public Node expressionTreeDNA;
 	public final BranchNode rootNode;
+	public static BranchNode newBranchNode;
 	public BranchNode currentNode;
+	public BranchNode previousNode;
 	public String rootChoiceExpression;
 	public String rootDirectionExpression;
 	public int ageOfSeedBranch;
@@ -134,9 +143,13 @@ public class Seed {
 		this.rootChoiceExpression = rootChoiceExpression;
 		this.rootDirectionExpression = rootDirectionExpression;
 		this.rootNode = branchNode;
+		
 		this.currentNode = this.rootNode;
+		this.previousNode = currentNode;
+		
 		this.initialx = initialx;
 		this.initialy = initialy;
+		
 		
 		lineList = new ArrayList<Line2D>();		
 		this.ageOfSeedBranch = 10;
@@ -153,17 +166,29 @@ public class Seed {
 	public String getDirectionExpression() {
 		return rootDirectionExpression;
 	}
-	
-	public void addBranch(BranchNode selectedNode, double evaluation, ArrayList<BranchNode> nodes, int x, int y) {
+	BranchNode newBranch; 
+	public void addBranch(BranchNode selectedNode, double evaluation, ArrayList<BranchNode> nodes, int x, int y, String newGradValue) {
 		//ageOfSeedBranch++;
-		BranchNode newBranch = new BranchNode(rootNode,evaluation,nodes,x,y,ageOfSeedBranch);
+		//newBranch = new BranchNode(rootNode,evaluation,nodes,x,y,ageOfSeedBranch, newGradValue);
 		//if(ageOfSeedBranch == 10)ageOfSeedBranch = 9;
-		
+		previousNode = currentNode;
+		System.out.println("SELECT NODE V " + selectedNode.value);
 		currentNode = selectedNode;
 		//Representation2D rep2D = new Representation2D();
 		
 		//rep2D.leafGrowth(this, sd);
-		currentNode.nodes.add(newBranch);
+		currentNode.nodes.add(new BranchNode(rootNode,evaluation,nodes,x,y,ageOfSeedBranch, newGradValue));//newBranch);
+		
+		for(int i = 0; i < currentNode.nodes.size(); i++) {
+			System.out.println("Branch: " + currentNode.nodes.get(i).value);
+		}
+		
+		if(currentNode.nodes.size() > 1 && rootNode.x != selectedNode.x && selectedNode.y != y) {
+			System.out.println("OVER " + currentNode.nodes.size() + " rootx: " + rootNode.x + " x " + selectedNode.x + " rooty: " + rootNode.y + " y " + selectedNode.y);
+			System.out.println(currentNode.nodes.get(0));
+	
+		}
+		newBranchNode = newBranch;
 
 		
 	}
@@ -199,10 +224,10 @@ public class Seed {
             For more information on poll() visit  
             http://www.tutorialspoint.com/java/util/linkedlist_poll.htm */
         	BranchNode tempNode = queue.poll(); 
-        	if(tempNode.ageOfRoot > 0) {
+        	//if(tempNode.ageOfRoot > 0) {
         		tempNode.value = RandomExpression.evaluate(rootChoiceExpression,this);
-        	}      	
-            //System.out.println("Node Value: " + tempNode.value + " "); 
+        	//}      	
+           // System.out.println("NodeEvaluate: x" + tempNode.x + " y" + tempNode.y + " V" + tempNode.value + " "); 
             if(tempNode.nodes == null) {
             	return;
             }
@@ -270,6 +295,7 @@ public class Seed {
 	        	}
 	        }
 	    }
+        System.out.println("MaxNode: x" + maxNode.x + " y" + maxNode.y + " V" + maxNode.value);
         return maxNode;
 	}
 }

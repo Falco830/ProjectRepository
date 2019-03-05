@@ -13,7 +13,7 @@ public class RandomExpression {
    */
   public static String getRandomExpression(int minLength) {
     String[] RULES = { "EE+", "EE-", "EE*", "EE/" };
-    String[] TERMINALS = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "B", "P","N", "R"}; //, "B", "P"
+    String[] TERMINALS = { /*"1", "2", "3", "4", "5", "6", "7", "8", "9",*/ "A", "C", "D" , "B", "P", "R"}; //, "B", "P"
 
     String expression = "E";
     int timer = minLength;
@@ -85,7 +85,7 @@ public class RandomExpression {
     	  double distance = Math.sqrt(Math.pow((seed.currentNode.x - seed.rootNode.x), 2) + (Math.pow((seed.currentNode.y - seed.rootNode.y), 2)));   	
     	  //System.out.println("B: " + distance);
     	  if(distance == 0) {
-    		  distance = Math.random() * 10;
+    		  distance = (Math.random() * 10);
     	  }
           stack.push(/*Branch distance*/ distance/*(double) Math.random() * 10*/);
       }else if (ch == 'P') {
@@ -111,6 +111,17 @@ public class RandomExpression {
          // System.out.println("P: " + distance);
       	 
       	 stack.push(/*Petree distance*/ (double) distance);
+      }else if (ch == 'A' || ch == 'C' || ch == 'D') {
+    	  double rand = 4;
+       	 if( ch == 'A') {
+       		 rand = (Math.random() * 3);
+       	 }else if( ch == 'C') {
+      		 rand =  (Math.random() * 13);
+      	 }else if( ch == 'D') {
+      		//distance to closest branch
+      	 }
+       	 
+       	 stack.push(/*Petree distance*/ rand);
       }else {
 
         double right = stack.pop();

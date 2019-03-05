@@ -27,6 +27,7 @@ public class PeetreeLaws {
 		
 		Line2D pl = rep.drawPotentialLine(startx, starty, endx, endy);
 		
+		
 		for(int i = 0; i < everySeed.seedList.size(); i++) {
 			if(everySeed.seedList.get(i).getLineList() == null) {
 				if(!rep.petreeDish.contains(startx, starty, endx, endy)) {

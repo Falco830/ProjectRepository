@@ -20,6 +20,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.sound.sampled.Line;
 import javax.swing.JApplet;
@@ -47,10 +48,17 @@ public class Representation2D extends JApplet {
     static Graphics2D g2;
     static Graphics g;
     
+    int gridGlobalWidth;
+    int gridGlobalHeight;
+    
+    
     static JFrame f;
     Dimension totalSize;
     FontMetrics fontMetrics;
     JApplet applet;
+    
+  	static HashMap<String,ArrayList<BranchNode>> gradiant = new HashMap<String,ArrayList<BranchNode>>();
+    
     
     static Point[] positions;	//Position and starting point of EACH SEED
     static int lineListSize;   //Area and size (not literal size) of Tree
@@ -58,6 +66,7 @@ public class Representation2D extends JApplet {
     static public Double petreeDish;
     //static int generation = 1;
     static Seed seed;
+    
 
     public void init() {
         //Initialize drawing colors
@@ -101,8 +110,14 @@ public class Representation2D extends JApplet {
         g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Dimension d = getSize();
+        
         int gridWidth = d.width / 6;
         int gridHeight = d.height / 2;
+        gridGlobalWidth = d.width;
+        gridGlobalHeight = d.height;
+
+        System.out.println("GRID HEGIHT " + gridGlobalWidth);
+        System.out.println("GRID WIDTH " + gridGlobalHeight);
 
         fontMetrics = pickFont(g2, "Filled and Stroked GeneralPath",
                                gridWidth);
@@ -118,6 +133,7 @@ public class Representation2D extends JApplet {
         g2.setStroke(wideStroke);
         g2.setPaint(white);
         petreeDish = new Ellipse2D.Double(20, 20, d.width-100, d.height-100);
+        createGradiant(d);
         g2.draw(petreeDish);
         paintSeedPositions(g);
         
@@ -125,6 +141,25 @@ public class Representation2D extends JApplet {
         paintLines();
         drawGeneration();
         drawScore();
+    }
+    
+    public void createGradiant(Dimension d) {
+    	 
+        int startingWidthGrad = 30;
+        int startingHeightGrad = 30;
+        String gradkey = 0 + ", " + 0;
+        for(int i = 0; i < (d.height); i++) {
+        	g2.setStroke(stroke);
+    		//g2.drawLine(0, startingHeightGrad, d.width, startingHeightGrad);
+        	for(int j = 0; j < (d.width); j++) {
+        		gradiant.put(gradkey, new ArrayList<BranchNode>());
+        		gradkey = startingWidthGrad + ", " + startingHeightGrad;
+        		//g2.drawLine(startingWidthGrad, 0, startingWidthGrad, d.height);
+        		startingWidthGrad +=30;
+        	}
+        	startingWidthGrad = 0;
+        	startingHeightGrad += 30;
+        }
     }
 
     public void paintLines() {    	
@@ -285,11 +320,9 @@ public class Representation2D extends JApplet {
     
     static Line2D lineBranch;
     //static Line2D line;
-    public void leafGrowth(Seed seed, SeedDNA sd) {
-    	//this.seed = seed;
-    	lineBranch = new Line2D.Double(seed.currentNode.x,seed.currentNode.y, sd.nextx, sd.nexty);
-    	seed.addToLineList(lineBranch);
-    	lineListSize= seed.getLineList().size();
+    public Line2D leafGrowth(int prevx, int prevy, int nextx, int nexty) {
+    	lineBranch = new Line2D.Double(prevx, prevy, nextx, nexty);
+    	return lineBranch;
   
     	//g2.setColor(Color.black);   	
     	//System.out.println("CurrentNode: " + seed.currentNode.x + " " + seed.currentNode.y +" "+sd.nextx +" "+ sd.nexty);   	

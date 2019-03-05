@@ -12,6 +12,8 @@ public class PeetreeDishStart {
 	
 	static int generation;
 	
+	static int topScore = 0;
+	
 	int peetreeDishSize;
 	int obstacles;
 	int peetreeDishShape;
@@ -38,17 +40,14 @@ public class PeetreeDishStart {
 		}
 
 		for(int i = 0; i < peetreeDish.positions.length; i++) {
-			seed = seedDNA.seedCreation(peetreeDish.positions[i].x, peetreeDish.positions[i].y);//new Seed(null, peetreeDish.positions[i].x, peetreeDish.positions[i].y, RandomExpression.getRandomExpression(5), RandomExpression.getRandomExpression(5));
+			seed = seedDNA.seedCreation(peetreeDish.positions[i].x, peetreeDish.positions[i].y,peetreeDish);//new Seed(null, peetreeDish.positions[i].x, peetreeDish.positions[i].y, RandomExpression.getRandomExpression(5), RandomExpression.getRandomExpression(5));
 			seedList.add(seed);
 		}
 		//NOW ROUND ROBIN	
 		for(int i = 0 ; i<300000; i++) {
 			RoundRobin();
-			if(generation % 100 == 0) {
-				peetreeDish.applet.repaint();	
-			}
-		}
-		
+			
+		}		
 	}
 	
 	
@@ -59,30 +58,45 @@ public class PeetreeDishStart {
 		while(peetreeDish.petreeDish == null) {	
 			System.out.print("null");
 		}
-		for(int i = 0; i < (100); i++) {
+		for(int i = 0; i < (1000); i++) {
 			int snum = 1;
 			for(Seed sd : seedList){
 				//System.out.println("_____________ SEED " + snum++ +" ____________");
-				sdna.seedGrowth(sd,peetreeDish);
+				sdna.seedGrowth(snum,sd,peetreeDish);
+				snum++;
 				//peetreeDish.leafGrowth(sd, sdna);
 				//peetreeDish.applet.repaint();
+			
+				
 				
 			}
+			snum = 1;
 					
 		}
 		
-		System.out.println("end");
 		
-		//Scanner next = new Scanner(System.in);
-		//System.out.println("next?: ");
-		//String yesNext = next.nextLine();
+		System.out.println("end");
+		peetreeDish.applet.repaint();
+		
+		if(generation % 100 == 0) {
+			Scanner next = new Scanner(System.in);
+			System.out.println("next?: ");
+			String yesNext = next.nextLine();
+			/*peetreeDish.applet.revalidate();
+			peetreeDish.applet.repaint();*/					
+		}
 		
 		//if(yesNext.equals("y")) {
 		generation++;
+		System.out.println("generation " + generation);
+		System.out.println("TopScore: " + topScore);
 		for(Seed sd : seedList) {
-			if(sd.getLineList().size() <= 100) {
-				System.out.println("generation " + generation);
+			if(sd.getLineList().size() < 600) {				
 				
+				if(topScore < sd.getLineList().size()) {
+					topScore = sd.getLineList().size();
+				}
+				peetreeDish.applet.repaint();
 				continue;		
 			}else {
 				System.out.println("done");
@@ -206,9 +220,10 @@ public class PeetreeDishStart {
 		SeedDNA sdna = new SeedDNA();
 		//System.out.println("shold be here next");
 		//for(int i = 0; i < peetreeDish.positions.length; i++) {
-			theUnluckyOne = sdna.mutateSeed(theChosenOne, theUnluckyOne); //new Seed(null, peetreeDish.positions[i].x, peetreeDish.positions[i].y, RandomExpression.getRandomExpression(5), RandomExpression.getRandomExpression(5));
+			theUnluckyOne = sdna.mutateSeed(theChosenOne, theUnluckyOne, peetreeDish); //new Seed(null, peetreeDish.positions[i].x, peetreeDish.positions[i].y, RandomExpression.getRandomExpression(5), RandomExpression.getRandomExpression(5));
 			//System.out.println("Index: " + index);
 			//System.out.println("SeedList: " + seedList.size());
+			System.out.println("CHANGING SEED " + index);
 			seedList.set(index, theUnluckyOne);
 		//}
 			nextGeneration();
@@ -220,17 +235,21 @@ public class PeetreeDishStart {
 		for(Seed sd : seedList){
 			sd.getLineList().clear();
 			//sd.rootNode = sd.;
-			sd.currentNode = sd.rootNode;
 			ArrayList<BranchNode> arb = new ArrayList<BranchNode>();
-			sd.currentNode.nodes = arb;
+			sd.rootNode.nodes = arb;
+			sd.currentNode = sd.rootNode;
+		
+			sd.ageOfSeedBranch = 10;
+			
+			//sd.currentNode.nodes = arb;
 			
 		}
+		for(ArrayList<BranchNode> bn:Representation2D.gradiant.values()) {
+			bn.clear();
+		}
 		
-			//RoundRobin();
 		
-		
-		
-			
+			//RoundRobin();	
 	}
 	
 	
