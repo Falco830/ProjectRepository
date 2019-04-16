@@ -1,5 +1,6 @@
 package plant.genetic.algorithm;
 
+import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,6 +16,7 @@ class BranchNode {
     int distanceFromRoot;
     int ageOfRoot;
     String gradiantValue;
+    double closestBranch;
     
     
     ArrayList<BranchNode> nodes;
@@ -118,7 +120,8 @@ class BranchNode {
       
         // If key is not found 
         return -1; 
-    } 
+    }
+  
 } 
 
 public class Seed {
@@ -166,10 +169,51 @@ public class Seed {
 	public String getDirectionExpression() {
 		return rootDirectionExpression;
 	}
+	
+	 public double closestBranchToThis(BranchNode currentNode, Representation2D rep) {
+	    double rand = 30;
+	    Point firstPoint = new Point();
+		Point currentPoint = new Point();
+		currentPoint.setLocation(currentNode.x, currentNode.y);
+		
+		if(rep.gradiant.get(currentNode.gradiantValue).size() > 1 && !rep.gradiant.get(currentNode.gradiantValue).isEmpty()) {
+			 System.out.println(Representation2D.gradiant.get(currentNode.gradiantValue).size());
+			 System.out.println(currentNode.gradiantValue);
+			 System.out.println(Representation2D.gradiant.get(currentNode.gradiantValue));
+			 
+			 if(!Representation2D.gradiant.get(currentNode.gradiantValue).contains(null) && !Representation2D.gradiant.get(currentNode.gradiantValue).isEmpty()) {
+	     		 if(Representation2D.gradiant.get(currentNode.gradiantValue).get(0).x != currentNode.x && Representation2D.gradiant.get(currentNode.gradiantValue).get(0).y != currentNode.y) {
+	     			 firstPoint.setLocation(Representation2D.gradiant.get(currentNode.gradiantValue).get(0).x, Representation2D.gradiant.get(currentNode.gradiantValue).get(0).y);
+	     			 
+	     		 }else {
+	     			 firstPoint.setLocation(Representation2D.gradiant.get(currentNode.gradiantValue).get(1).x, Representation2D.gradiant.get(currentNode.gradiantValue).get(1).y);
+	     		 }
+	     		double closestBranchDistance = firstPoint.distance(currentPoint);
+	     			  //= Representation2D.gradiant.get(seed.currentNode.gradiantValue).get(0).x;
+	     		 for(int i = 0; i < Representation2D.gradiant.get(currentNode.gradiantValue).size(); i++) {
+	     			  firstPoint.setLocation(Representation2D.gradiant.get(currentNode.gradiantValue).get(i).x, Representation2D.gradiant.get(currentNode.gradiantValue).get(i).y);
+	     			double newBranchDistance = firstPoint.distance(currentPoint);
+	     			  if(closestBranchDistance > newBranchDistance) {
+	     				 closestBranchDistance = newBranchDistance;
+	     				 System.out.println("WORKS");
+	     				 //System.exit(0);
+	     			 }
+	     		 }
+	     		rand = closestBranchDistance;     				 
+			 }else {
+				 rand = 30;
+			 }     			 
+		 }else {
+			 rand = 30;
+		 } 
+		 return rand;
+	}
+	
+	
 	BranchNode newBranch; 
 	public void addBranch(BranchNode selectedNode, double evaluation, ArrayList<BranchNode> nodes, int x, int y, String newGradValue) {
 		//ageOfSeedBranch++;
-		//newBranch = new BranchNode(rootNode,evaluation,nodes,x,y,ageOfSeedBranch, newGradValue);
+		newBranch = new BranchNode(rootNode,evaluation,nodes,x,y,ageOfSeedBranch, newGradValue);
 		//if(ageOfSeedBranch == 10)ageOfSeedBranch = 9;
 		previousNode = currentNode;
 		System.out.println("SELECT NODE V " + selectedNode.value);

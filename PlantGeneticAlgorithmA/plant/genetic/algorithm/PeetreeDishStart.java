@@ -58,7 +58,7 @@ public class PeetreeDishStart {
 		while(peetreeDish.petreeDish == null) {	
 			System.out.print("null");
 		}
-		for(int i = 0; i < (1000); i++) {
+		for(int i = 0; i < (10 * (generation/10)); i++) {
 			int snum = 1;
 			for(Seed sd : seedList){
 				//System.out.println("_____________ SEED " + snum++ +" ____________");
@@ -67,7 +67,7 @@ public class PeetreeDishStart {
 				//peetreeDish.leafGrowth(sd, sdna);
 				//peetreeDish.applet.repaint();
 			
-				
+			//	peetreeDish.applet.repaint();
 				
 			}
 			snum = 1;

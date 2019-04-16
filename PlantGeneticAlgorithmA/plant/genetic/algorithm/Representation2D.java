@@ -63,6 +63,7 @@ public class Representation2D extends JApplet {
     static Point[] positions;	//Position and starting point of EACH SEED
     static int lineListSize;   //Area and size (not literal size) of Tree
     
+    static public Ellipse2D petreeDishElipse;
     static public Double petreeDish;
     //static int generation = 1;
     static Seed seed;
@@ -133,6 +134,7 @@ public class Representation2D extends JApplet {
         g2.setStroke(wideStroke);
         g2.setPaint(white);
         petreeDish = new Ellipse2D.Double(20, 20, d.width-100, d.height-100);
+        petreeDishElipse = new Ellipse2D.Double(20, 20, d.width-100, d.height-100);
         createGradiant(d);
         g2.draw(petreeDish);
         paintSeedPositions(g);
@@ -193,7 +195,7 @@ public class Representation2D extends JApplet {
 	    					    			g2.setColor(Color.BLACK);
 	    					    			break;
 	    					    		case 4:
-	    					    			g2.setColor(Color.GREEN);
+	    					    			g2.setColor(Color.CYAN);
 	    					    			break;
 	    					    		case 5:
 	    					    			g2.setColor(Color.GRAY);

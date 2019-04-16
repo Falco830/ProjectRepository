@@ -1,5 +1,7 @@
 package plant.genetic.algorithm;
 
+import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.Stack;
 
 public class RandomExpression {
@@ -116,9 +118,11 @@ public class RandomExpression {
        	 if( ch == 'A') {
        		 rand = (Math.random() * 3);
        	 }else if( ch == 'C') {
+       		
       		 rand =  (Math.random() * 13);
       	 }else if( ch == 'D') {
       		//distance to closest branch
+      		rand = seed.currentNode.closestBranch;
       	 }
        	 
        	 stack.push(/*Petree distance*/ rand);

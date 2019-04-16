@@ -83,7 +83,7 @@ public class PeetreeLaws {
 		//System.out.println("h: " + rep.petreeDish.height + " w: " + rep.petreeDish.width);
 		//System.out.println("endx: " + endx + " endy " + endy);
 		
-		if(!rep.petreeDish.intersects(startx, starty, endx, endy)) {
+		if(!rep.petreeDishElipse.contains(endx, endy)) {
 			//System.out.println("broke peetree law");
 			return true;
 		}

@@ -97,8 +97,12 @@ public class SeedDNA {
 			System.out.println("gradKey: " + gradKey);
 			System.out.println("exists: " + Representation2D.gradiant.containsKey(gradKey));
 			//if(Representation2D.gradiant.get(gradKey))
+			System.out.println(Representation2D.gradiant.get(gradKey).size());
 			  
+	
 			Representation2D.gradiant.get(gradKey).add(Seed.newBranchNode);
+
+			seed.currentNode.nodes.get(seed.currentNode.nodes.size()-1).closestBranch = seed.closestBranchToThis(seed.currentNode.nodes.get(seed.currentNode.nodes.size()-1),rep);
 			System.out.println("REP: " + seed.previousNode.x + ", " + seed.previousNode.y + " : " + nextx + ", " + nexty);
 			seed.addToLineList(rep.leafGrowth(seed.previousNode.x, seed.previousNode.y, nextx, nexty));
 	    	
